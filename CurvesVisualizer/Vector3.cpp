@@ -40,6 +40,13 @@ Vector3::~Vector3(){}
  *  Member functions
  *
  */
+double Vector3::distance(const Vector3& a, const Vector3& b)
+{
+    double xx = (a.getx()-b.getx())*(a.getx()-b.getx());
+    double yy = (a.gety()-b.gety())*(a.gety()-b.gety());
+    double zz = (a.getz()-b.getz())*(a.getz()-b.getz());
+    return sqrt(xx+yy+zz);
+}
 void Vector3::print() const
 {
     std::cout << *this;
@@ -69,9 +76,7 @@ Vector3 Vector3::operator-(const Vector3& other) const
 }
 Vector3 Vector3::operator* (float scalar)
 {
-    Vector3 temp(*this);
-    temp.x *= scalar;  temp.y *= scalar;  temp.z *= scalar;
-    return temp;
+    return scalar * (*this);
 }
 Vector3& Vector3::operator+= (const Vector3& other)
 {
@@ -87,11 +92,14 @@ Vector3& Vector3::operator-= (const Vector3& other)
     this->z -= other.z;
     return *this;
 }
-void Vector3::operator= (const Vector3& other)
+Vector3& Vector3::operator= (const Vector3& other)
 {
-    this->x = other.x;
-    this->y = other.y;
-    this->z = other.z;
+    if(this != &other){
+        this->x = other.x;
+        this->y = other.y;
+        this->z = other.z;
+    }
+    return *this;
 }
 bool Vector3::operator== (const Vector3& other) const
 {

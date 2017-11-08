@@ -6,10 +6,14 @@
 //  Copyright © 2017 Chan Tsz Kin. All rights reserved.
 //
 
-#include <OpenGL/gl3.h>
+#ifdef _WIN32
+#include <GL/glew.h>
+#endif
+
 #include <GLFW/glfw3.h>
 #include "Vector3.h"
 #include "Shader.h"
+#include "Geometry.h"
 #include "Curve.h"
 
 bool lbutton_down;
@@ -20,15 +24,17 @@ unsigned int HEIGHT = 600, WIDTH = 600;
 
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-    Curve* bezierPointer = (Curve*)glfwGetWindowUserPointer(window);
+    Curve* EditableCurvePointer = (Curve*)glfwGetWindowUserPointer(window);
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
         glfwSetWindowShouldClose(window, GLFW_TRUE);
     if (key == GLFW_KEY_EQUAL && action == GLFW_PRESS)
-        bezierPointer->increaseSubdivision();
+        EditableCurvePointer->increaseSubdivision();
     if (key == GLFW_KEY_MINUS && action == GLFW_PRESS)
-        bezierPointer->decreaseSubdivision();
+        EditableCurvePointer->decreaseSubdivision();
     if (key == GLFW_KEY_1 && action == GLFW_PRESS)
-        bezierPointer->showPolyline = !bezierPointer->showPolyline;
+        EditableCurvePointer->showPolyline = !EditableCurvePointer->showPolyline;
+    if (key == GLFW_KEY_2 && action == GLFW_PRESS)
+        EditableCurvePointer->switchCurve();
 }
 
 static void mouse_callback(GLFWwindow* window, int button, int action, int mods)
@@ -58,29 +64,35 @@ int main(int argc, const char * argv[]) {
     // Initialise GLFW
     if(!glfwInit()){
         glfwTerminate();
-        return -1;
+        return 1;
     }
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     GLFWwindow* window = glfwCreateWindow(HEIGHT, WIDTH, "Curves Visualizer", NULL, NULL);
     if(!window){
         glfwDestroyWindow(window);
-        return -1;
+        return 2;
     }
     // Event listener and MakeContextCurrent
     glfwSetKeyCallback(window, key_callback);
     glfwSetMouseButtonCallback(window, mouse_callback);
     glfwSetCursorPosCallback(window, cursor_position_callback);
     glfwMakeContextCurrent(window);
+
+#ifdef _WIN32
+	// GLEW
+	if (glewInit() != GLEW_OK)
+		std::cout << "ERROR::GLEW_INIT()\n";
+#endif
     
     std::cout << "\n\n\n\n\n\n\n\n\n\n==============PROGRAM STARTED==============\n";
     
     
     unsigned int shaderProgram = loadShader();
-    Curve bezier(shaderProgram);
-    glfwSetWindowUserPointer(window, &bezier);
+    Curve EditableCurve(shaderProgram);
+    glfwSetWindowUserPointer(window, &EditableCurve);
     
     // Main Loop
     while (!glfwWindowShouldClose(window))
@@ -91,13 +103,13 @@ int main(int argc, const char * argv[]) {
         glUseProgram(shaderProgram);
         
         if(lbutton_down) {
-            if(bezier.dragingIndex != -1)
-                bezier.drag(bezier.dragingIndex, Vector3(XPOS, YPOS, 0.0));
+            if(EditableCurve.dragingIndex != -1)
+                EditableCurve.drag(EditableCurve.dragingIndex, Vector3(XPOS, YPOS, 0.0));
         }else{
-            bezier.dragingIndex = -1;
+            EditableCurve.dragingIndex = -1;
         }
         
-        bezier.draw();
+        EditableCurve.draw();
         
         // Swap buffers
         glfwSwapBuffers(window);

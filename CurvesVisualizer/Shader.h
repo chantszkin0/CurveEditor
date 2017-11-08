@@ -9,6 +9,8 @@
 #ifndef Shader_h
 #define Shader_h
 
+#include <iostream>
+
 static const char* vShaderSource = "#version 330 core\n"
 "layout (location = 0) in vec3 aPos;\n"
 "void main()\n"
@@ -21,7 +23,7 @@ static const char* fShaderSource = "#version 330 core\n"
 "void main()\n"
 "{\n"
 "   if(isPolyline)\n"
-"       FragColor = vec4(1.0, 1.0, 1.0, 1.0);\n"
+"       FragColor = vec4(1.0, 1.0, 1.0, 0.5);\n"
 "   else\n"
 "       FragColor = vec4(0.0, 1.0, 0.0, 1.0);\n"
 "}\n\0";

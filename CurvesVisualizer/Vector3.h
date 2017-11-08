@@ -23,6 +23,7 @@ public:
     double getx() const    {return x;}
     double gety() const    {return y;}
     double getz() const    {return z;}
+    static double distance(const Vector3&a, const Vector3& b);
     void print() const;
     
     // Operator overloading
@@ -37,8 +38,19 @@ public:
     Vector3 operator* (float scalar);
     Vector3& operator+= (const Vector3& other);
     Vector3& operator-= (const Vector3& other);
-    void operator= (const Vector3& other);
+    Vector3& operator= (const Vector3& other);
     bool operator== (const Vector3& other) const;
+    double operator[] (int i) const {
+        if(i == 0)
+            return x;
+        else if(i == 1)
+            return y;
+        else if(i == 2)
+            return z;
+        else
+            std::cout << "ERROR::VECTOR3::OUT_OF_ARRAY\n";
+        return 0;
+    };
     friend std::ostream& operator<< (std::ostream& os, const Vector3& other)
     {
         os << "[" << other.x << ", " << other.y << ", " << other.z << "]\n";
