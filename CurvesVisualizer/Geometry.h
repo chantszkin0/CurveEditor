@@ -15,13 +15,15 @@
 class Geometry{
 public:
     Geometry();
+    Geometry(double*, int);
     Geometry(const Geometry&);
     ~Geometry();
     
     int size() const;
     bool empty() const;
     Vector3* getData() const;
-    Matrix getMatrix4(int) const;
+    Vector3 getFirst() const;
+    Matrix getMatrix4(int, bool = false) const;
     void pushVec3(const Vector3&);
     Vector3 popVec3();
     void clear();

@@ -7,25 +7,37 @@
 //
 
 #include "Curve.h"
+#include "Shader.h"
 
-Curve::Curve(unsigned int shaderProgram)
+Curve::Curve() : BezierBSpline(true), showPolyline(true)
 {
-    Shader = shaderProgram;
-    // Allocate Polyline Buffer & Create
-    glGenVertexArrays(1, &PolylineVAO);
-    glGenBuffers(1, &PolylineVBO);
-    CreatePolyline();
-    // Allocate Curve Buffer & Create
-    glGenVertexArrays(1, &CurveVAO);
-    glGenBuffers(1, &CurveVBO);
-    CreateCurve();
+    Shader = loadShader();
+    AllocBuffers();
+}
+Curve::Curve(double* arr, int n) : BezierBSpline(true), showPolyline(true)
+{
+    Shader = loadShader();
+    AllocBuffers();
+    ControlPoints = Geometry(arr, n);
+    UpdatePolylines();
+    UpdateCurves();
 }
 Curve::~Curve()
 {
-    
+
 }
 
-void Curve::CreateCurve ()
+void Curve::AllocBuffers ()
+{
+    // Allocate Polyline Buffer & Create
+    glGenVertexArrays(1, &PolylineVAO);
+    glGenBuffers(1, &PolylineVBO);
+    // Allocate Curve Buffer & Create
+    glGenVertexArrays(1, &CurveVAO);
+    glGenBuffers(1, &CurveVBO);
+}
+
+void Curve::UpdateCurves ()
 {
     if(BezierBSpline)
         CurvePoints = CreateBSplineCurve();
@@ -40,7 +52,7 @@ void Curve::CreateCurve ()
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_DOUBLE, GL_FALSE, sizeof(Vector3), (void*)0);
 }
-void Curve::CreatePolyline ()
+void Curve::UpdatePolylines ()
 {
     // Create Polyline
     glBindVertexArray(PolylineVAO);
@@ -57,7 +69,7 @@ Geometry Curve::CreateBezierCurve ()
     Matrix geoMatrix;
     Matrix bezierMatrix = Matrix(BEZIER, 4, 4);
     for(int stride = 0; stride < ControlPoints.size(); stride+=3){
-        geoMatrix = ControlPoints.getMatrix4(stride);
+        geoMatrix = ControlPoints.getMatrix4(stride, closeLoop);
         for(int i = 0; i < SubdivisionSegment+1; ++i){
             double t = i * (1.0/(double)SubdivisionSegment);
             double power[4] = {1, t, t*t, t*t*t};
@@ -74,13 +86,15 @@ Geometry Curve::CreateBSplineCurve()
     Geometry extraKnot;
     Matrix geoMatrix;
     Matrix bSplineMatrix = Matrix(BSPLINE, 4, 4);
-    if(ControlPoints.size()!=0){
+    if(ControlPoints.size()!=0 && !closeLoop){
         for(int i = 0; i < 3; ++i)
             extraKnot.pushVec3(ControlPoints.getData()[0]);
         extraKnot = extraKnot + ControlPoints;
+    }else{
+        extraKnot = ControlPoints;
     }
     for(int stride = 0; stride < extraKnot.size(); ++stride){
-        geoMatrix = extraKnot.getMatrix4(stride);
+        geoMatrix = extraKnot.getMatrix4(stride, closeLoop);
         if(stride)
         for(int i = 0; i < SubdivisionSegment+1; ++i){
             double t = i * (1.0/(double)SubdivisionSegment);
@@ -97,20 +111,34 @@ void Curve::increaseSubdivision ()
 {
     if(SubdivisionSegment < 50){
         SubdivisionSegment++;
-        CreateCurve();
+        UpdateCurves();
     }
 }
 void Curve::decreaseSubdivision ()
 {
     if(SubdivisionSegment > 1){
         SubdivisionSegment--;
-        CreateCurve();
+        UpdateCurves();
     }
+}
+void Curve::togglePolyline()
+{
+    showPolyline = !showPolyline;
+}
+void Curve::toggleLoop()
+{
+    closeLoop = !closeLoop;
+    if(closeLoop)
+        ControlPoints.pushVec3(ControlPoints.getFirst());
+    else
+        ControlPoints.popVec3();
+    UpdatePolylines();
+    UpdateCurves();
 }
 void Curve::switchCurve()
 {
     BezierBSpline = !BezierBSpline;
-    CreateCurve();
+    UpdateCurves();
 }
 
 /*
@@ -118,9 +146,11 @@ void Curve::switchCurve()
  */
 void Curve::drag (int index, const Vector3& position)
 {
+    if(closeLoop)
+        ControlPoints[ControlPoints.size()-1] = ControlPoints.getFirst();
     ControlPoints[index] = position;
-    CreatePolyline();
-    CreateCurve();
+    UpdatePolylines();
+    UpdateCurves();
 }
 int Curve::getHoverControlPointIndex (double xpos, double ypos)
 {
@@ -133,15 +163,23 @@ int Curve::getHoverControlPointIndex (double xpos, double ypos)
 }
 void Curve::appendControlPoint (const Vector3& other)
 {
+    if(closeLoop){
+        std::cout << "Could not add control points, since it is a closed loop!\n";
+        return;
+    }
     ControlPoints.pushVec3(other);
-    CreatePolyline();
-    CreateCurve();
+    UpdatePolylines();
+    UpdateCurves();
 }
 void Curve::removeControlPoint ()
 {
+    if(closeLoop){
+        std::cout << "Could not remove control points, since it is a closed loop!\n";
+        return;
+    }
     ControlPoints.popVec3();
-    CreatePolyline();
-    CreateCurve();
+    UpdatePolylines();
+    UpdateCurves();
 }
 
 /*
@@ -149,6 +187,8 @@ void Curve::removeControlPoint ()
  */
 void Curve::draw ()
 {
+    // Use Shader Progarm
+    glUseProgram(Shader);
     // Draw Polyline
     if(showPolyline)
         drawPolyline();

@@ -28,19 +28,27 @@ const double BSPLINE[16] = {1.0/6.0, -3.0/6.0, 3.0/6.0, -1.0/6.0, 4.0/6.0, 0, -6
 class Curve
 {
 public:
-    bool showPolyline = true;
     int dragingIndex = -1;
     
-    Curve(unsigned int shaderProgram);
+    /// Constructors and Destrctors
+    Curve();
+    Curve(double*, int);
     ~Curve();
     
-    void CreateCurve ();
-    void CreatePolyline ();
+    /// VAO and VBO Allocation
+    void AllocBuffers ();
+    
+    /// Buffer Updates
+    void UpdateCurves ();
+    void UpdatePolylines ();
     Geometry CreateBezierCurve ();
     Geometry CreateBSplineCurve ();
     
+    /// Input Changes
     void increaseSubdivision ();
     void decreaseSubdivision ();
+    void togglePolyline();
+    void toggleLoop();
     void switchCurve();
     
     /// Control Points
@@ -58,8 +66,10 @@ private:
     unsigned int PolylineVAO, PolylineVBO;
     unsigned int CurveVAO, CurveVBO;
     
-    ///  Curve Type (FALSE = Bezier, TRUE = B-Spline)
-    bool BezierBSpline;
+    ///  Input Controls
+    bool BezierBSpline;             //  Curve Type (FALSE = Bezier, TRUE = B-Spline)
+    bool showPolyline;              //  Polyline   (FALSE = hide,   TRUE = show)
+    bool closeLoop;                 //  Loop       (FALSE = open,   TRUE = close)
 
     ///  Edit ControlPoints
     float controlRadius = 0.05;

@@ -7,7 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8072A9281FB1A34B00207B70 /* Geometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8072A9271FB1A34B00207B70 /* Geometry.cpp */; };
+		80A0491D1FB2E6FC00AAFA9E /* Curve.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 80A0491C1FB2E6FC00AAFA9E /* Curve.cpp */; };
+		80D5872B1FA59D1700C88511 /* Matrix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 80D5872A1FA59D1700C88511 /* Matrix.cpp */; };
 		80F0B9861FA07FAC00BAFFB3 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 80F0B9851FA07FAC00BAFFB3 /* main.cpp */; };
+		80F0B98E1FA07FC100BAFFB3 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 80F0B98D1FA07FB800BAFFB3 /* OpenGL.framework */; };
+		80F0B9921FA0801B00BAFFB3 /* libglfw.3.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 80F0B9911FA0801B00BAFFB3 /* libglfw.3.2.dylib */; };
+		80F0B9951FA084C300BAFFB3 /* Vector3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 80F0B9941FA084C300BAFFB3 /* Vector3.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -23,8 +29,20 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		8072A9261FB1A33B00207B70 /* Geometry.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Geometry.h; sourceTree = "<group>"; };
+		8072A9271FB1A34B00207B70 /* Geometry.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Geometry.cpp; sourceTree = "<group>"; };
+		80A0491C1FB2E6FC00AAFA9E /* Curve.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Curve.cpp; sourceTree = "<group>"; };
+		80D587291FA592FC00C88511 /* Matrix.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Matrix.h; sourceTree = "<group>"; };
+		80D5872A1FA59D1700C88511 /* Matrix.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Matrix.cpp; sourceTree = "<group>"; };
 		80F0B9821FA07FAC00BAFFB3 /* CurvesVisualizer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = CurvesVisualizer; sourceTree = BUILT_PRODUCTS_DIR; };
 		80F0B9851FA07FAC00BAFFB3 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		80F0B98D1FA07FB800BAFFB3 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
+		80F0B98F1FA07FEE00BAFFB3 /* glfw3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = glfw3.h; path = ../../../../usr/local/Cellar/glfw/3.2.1/include/GLFW/glfw3.h; sourceTree = "<group>"; };
+		80F0B9911FA0801B00BAFFB3 /* libglfw.3.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw.3.2.dylib; path = ../../../../usr/local/Cellar/glfw/3.2.1/lib/libglfw.3.2.dylib; sourceTree = "<group>"; };
+		80F0B9931FA0803C00BAFFB3 /* Vector3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Vector3.h; sourceTree = "<group>"; };
+		80F0B9941FA084C300BAFFB3 /* Vector3.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Vector3.cpp; sourceTree = "<group>"; };
+		80F0B9981FA0C31E00BAFFB3 /* Shader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Shader.h; sourceTree = "<group>"; };
+		80F0B9991FA17CE400BAFFB3 /* Curve.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Curve.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -32,6 +50,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				80F0B9921FA0801B00BAFFB3 /* libglfw.3.2.dylib in Frameworks */,
+				80F0B98E1FA07FC100BAFFB3 /* OpenGL.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -43,6 +63,7 @@
 			children = (
 				80F0B9841FA07FAC00BAFFB3 /* CurvesVisualizer */,
 				80F0B9831FA07FAC00BAFFB3 /* Products */,
+				80F0B98C1FA07FB800BAFFB3 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -58,8 +79,27 @@
 			isa = PBXGroup;
 			children = (
 				80F0B9851FA07FAC00BAFFB3 /* main.cpp */,
+				80F0B9931FA0803C00BAFFB3 /* Vector3.h */,
+				80F0B9941FA084C300BAFFB3 /* Vector3.cpp */,
+				80F0B9981FA0C31E00BAFFB3 /* Shader.h */,
+				80F0B9991FA17CE400BAFFB3 /* Curve.h */,
+				80A0491C1FB2E6FC00AAFA9E /* Curve.cpp */,
+				80D587291FA592FC00C88511 /* Matrix.h */,
+				80D5872A1FA59D1700C88511 /* Matrix.cpp */,
+				8072A9261FB1A33B00207B70 /* Geometry.h */,
+				8072A9271FB1A34B00207B70 /* Geometry.cpp */,
 			);
 			path = CurvesVisualizer;
+			sourceTree = "<group>";
+		};
+		80F0B98C1FA07FB800BAFFB3 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				80F0B9911FA0801B00BAFFB3 /* libglfw.3.2.dylib */,
+				80F0B98F1FA07FEE00BAFFB3 /* glfw3.h */,
+				80F0B98D1FA07FB800BAFFB3 /* OpenGL.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -119,6 +159,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				80D5872B1FA59D1700C88511 /* Matrix.cpp in Sources */,
+				8072A9281FB1A34B00207B70 /* Geometry.cpp in Sources */,
+				80F0B9951FA084C300BAFFB3 /* Vector3.cpp in Sources */,
+				80A0491D1FB2E6FC00AAFA9E /* Curve.cpp in Sources */,
 				80F0B9861FA07FAC00BAFFB3 /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -234,6 +278,11 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = U78UYY28JB;
+				HEADER_SEARCH_PATHS = /usr/local/include;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/local/Cellar/glfw/3.2.1/lib,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -243,6 +292,11 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = U78UYY28JB;
+				HEADER_SEARCH_PATHS = /usr/local/include;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/local/Cellar/glfw/3.2.1/lib,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

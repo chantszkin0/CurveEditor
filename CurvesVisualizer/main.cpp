@@ -11,9 +11,6 @@
 #endif
 
 #include <GLFW/glfw3.h>
-#include "Vector3.h"
-#include "Shader.h"
-#include "Geometry.h"
 #include "Curve.h"
 
 bool lbutton_down;
@@ -32,9 +29,11 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
     if (key == GLFW_KEY_MINUS && action == GLFW_PRESS)
         EditableCurvePointer->decreaseSubdivision();
     if (key == GLFW_KEY_1 && action == GLFW_PRESS)
-        EditableCurvePointer->showPolyline = !EditableCurvePointer->showPolyline;
+        EditableCurvePointer->togglePolyline();
     if (key == GLFW_KEY_2 && action == GLFW_PRESS)
         EditableCurvePointer->switchCurve();
+    if (key == GLFW_KEY_3 && action == GLFW_PRESS)
+        EditableCurvePointer->toggleLoop();
 }
 
 static void mouse_callback(GLFWwindow* window, int button, int action, int mods)
@@ -89,18 +88,21 @@ int main(int argc, const char * argv[]) {
     
     std::cout << "\n\n\n\n\n\n\n\n\n\n==============PROGRAM STARTED==============\n";
     
-    
-    unsigned int shaderProgram = loadShader();
-    Curve EditableCurve(shaderProgram);
+    double points[12] = {0.5, 0.5, 0.0, 0.5, -0.5, 0, -0.5, -0.5, 0.0, -0.5, 0.5, 0.0};
+    Curve EditableCurve(points, 12);
     glfwSetWindowUserPointer(window, &EditableCurve);
     
-    // Main Loop
+    /*
+     *
+     *  Main Loop
+     *
+     */
     while (!glfwWindowShouldClose(window))
     {
         glClearColor(0.2, 0.2, 0.2, 1.0);
         glClear(GL_COLOR_BUFFER_BIT);
         
-        glUseProgram(shaderProgram);
+        //glUseProgram(shaderProgram);
         
         if(lbutton_down) {
             if(EditableCurve.dragingIndex != -1)
